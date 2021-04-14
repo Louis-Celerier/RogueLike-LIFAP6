@@ -29,11 +29,21 @@ public class VueControleur extends JFrame implements Observer {
     private int sizeY;
 
     // icones affichées dans la grille
-    private ImageIcon icoHero;
+    private ImageIcon icoHeroD;
+    private ImageIcon icoHeroB;
+    private ImageIcon icoHeroG;
+    private ImageIcon icoHeroH;
+
     private ImageIcon icoCaseNormale;
+    private ImageIcon icoCaseUOk;
+    private ImageIcon icoCaseUPasOk;
     private ImageIcon icoMur;
     private ImageIcon icoColonne;
+    private ImageIcon icoPorte;
+
     private ImageIcon icoCle;
+    private ImageIcon icoEau;
+    private ImageIcon icoCoffre;
 
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associée à une icône, suivant ce qui est présent dans le modèle)
 
@@ -57,7 +67,7 @@ public class VueControleur extends JFrame implements Observer {
                     case KeyEvent.VK_RIGHT : jeu.getHeros().droite();break;
                     case KeyEvent.VK_DOWN : jeu.getHeros().bas(); break;
                     case KeyEvent.VK_UP : jeu.getHeros().haut(); break;
-
+                    case KeyEvent.VK_A : jeu = new Jeu(); break;
                 }
             }
         });
@@ -65,10 +75,20 @@ public class VueControleur extends JFrame implements Observer {
 
 
     private void chargerLesIcones() {
-        icoHero = chargerIcone("Images/Pacman.png");
+        icoHeroD = chargerIcone("Images/PacmanD.png");
+        icoHeroG = chargerIcone("Images/PacmanG.png");
+        icoHeroB = chargerIcone("Images/PacmanB.png");
+        icoHeroH = chargerIcone("Images/PacmanH.png");
+
         icoCaseNormale = chargerIcone("Images/Vide.png");
+        icoCaseUOk = chargerIcone("Images/CaseUOk.png");
+        icoCaseUPasOk = chargerIcone("Images/CaseUPasOk.png");
         icoMur = chargerIcone("Images/Mur.png");
+        icoPorte = chargerIcone("Images/Porte.png");
+
         icoCle = chargerIcone("Images/Cle.png");
+        icoEau = chargerIcone("Images/Eau.png");
+        icoCoffre = chargerIcone("Images/Coffre.png");
     }
 
     private ImageIcon chargerIcone(String urlIcone) {
@@ -114,16 +134,50 @@ public class VueControleur extends JFrame implements Observer {
 				EntiteStatique e = jeu.getEntite(x, y);
                 if (e instanceof Mur) {
                     tabJLabel[x][y].setIcon(icoMur);
+                } else if (e instanceof Porte) {
+                    tabJLabel[x][y].setIcon(icoPorte);
                 } else if (e instanceof CaseNormale) {
-                    tabJLabel[x][y].setIcon(icoCaseNormale);
+                            tabJLabel[x][y].setIcon(icoCaseNormale);
+                } else if (e instanceof CaseUnique) {
+                    if (e.traversable()) {
+                        tabJLabel[x][y].setIcon(icoCaseUOk);
+                    } else {
+                        tabJLabel[x][y].setIcon(icoCaseUPasOk);
+                    }
                 }
             }
         }
 
 
-
-        tabJLabel[jeu.getHeros().getX()][jeu.getHeros().getY()].setIcon(icoHero);
-        tabJLabel[jeu.getCle().getX()][jeu.getCle().getY()].setIcon(icoCle);
+        switch (jeu.getHeros().getOrientation()) {
+            case 0:
+                tabJLabel[jeu.getHeros().getX()][jeu.getHeros().getY()].setIcon(icoHeroD);
+                break;
+            case 1:
+                tabJLabel[jeu.getHeros().getX()][jeu.getHeros().getY()].setIcon(icoHeroG);
+                break;
+            case 2:
+                tabJLabel[jeu.getHeros().getX()][jeu.getHeros().getY()].setIcon(icoHeroB);
+                break;
+            case 3:
+                tabJLabel[jeu.getHeros().getX()][jeu.getHeros().getY()].setIcon(icoHeroH);
+                break;
+        }
+        for (Pickable element: jeu.getPickables()) {
+            if(!element.getUtiliser()) {
+                switch (element.getSignature()) {
+                    case 0:
+                        tabJLabel[element.getX()][element.getY()].setIcon(icoCle);
+                        break;
+                    case 1:
+                        tabJLabel[element.getX()][element.getY()].setIcon(icoEau);
+                        break;
+                    case 2:
+                        tabJLabel[element.getX()][element.getY()].setIcon(icoCoffre);
+                        break;
+                }
+            }
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@
 package modele.plateau;
 
 import java.util.Observable;
+import java.util.Random;
 
 
 public class Jeu extends Observable implements Runnable {
@@ -16,10 +17,15 @@ public class Jeu extends Observable implements Runnable {
     private int pause = 200; // période de rafraichissement
 
     private Heros heros;
+    private Porte porte;
 
-    private Cle cle;
+    public Porte getPorte() {
+        return porte;
+    }
 
     private EntiteStatique[][] grilleEntitesStatiques = new EntiteStatique[SIZE_X][SIZE_Y];
+    private Pickable[] grillePickables = new Pickable[4];
+    private CaseUnique[] grilleCasesUniques = new CaseUnique[3];
 
     public Jeu() {
         initialisationDesEntites();
@@ -29,15 +35,19 @@ public class Jeu extends Observable implements Runnable {
         return heros;
     }
 
-    public Cle getCle() {
-        return cle;
-    }
-
     public EntiteStatique[][] getGrille() {
         return grilleEntitesStatiques;
     }
 
-	public EntiteStatique getEntite(int x, int y) {
+    public Pickable[] getPickables() {
+        return grillePickables;
+    }
+
+    public CaseUnique[] getCasesUniques() {
+        return grilleCasesUniques;
+    }
+
+    public EntiteStatique getEntite(int x, int y) {
 		if (x < 0 || x >= SIZE_X || y < 0 || y >= SIZE_Y) {
 			// L'entité demandée est en-dehors de la grille
 			return null;
@@ -46,9 +56,9 @@ public class Jeu extends Observable implements Runnable {
 	}
 
     private void initialisationDesEntites() {
+        Random random = new Random();
         heros = new Heros(this, 4, 4);
-
-
+        int posX, posY, pickChoix;
 
         // murs extérieurs horizontaux
         for (int x = 0; x < 20; x++) {
@@ -65,6 +75,26 @@ public class Jeu extends Observable implements Runnable {
         addEntiteStatique(new Mur(this), 2, 6);
         addEntiteStatique(new Mur(this), 3, 6);
 
+        if(random.nextBoolean()) {
+            posX = (1+random.nextInt(18-1));
+            if(random.nextBoolean()) {
+                posY = 0;
+            }
+            else {
+                posY = 9;
+            }
+        }
+        else {
+            posY = (1+random.nextInt(8-1));
+            if(random.nextBoolean()) {
+                posX = 0;
+            }
+            else {
+                posX = 19;
+            }
+        }
+        addEntiteStatique(porte = new Porte(this, posX, posY), posX, posY);
+
         for (int x = 0; x < SIZE_X; x++) {
             for (int y = 0; y < SIZE_Y; y++) {
                 if (grilleEntitesStatiques[x][y] == null) {
@@ -73,8 +103,23 @@ public class Jeu extends Observable implements Runnable {
 
             }
         }
+        for (int i = 0; i < 3; i++) {
+            posX = 1+random.nextInt(19-1);
+            posY = 1+random.nextInt(8-1);
+            grilleEntitesStatiques[posX][posY] = grilleCasesUniques[i] = new CaseUnique(this, posX, posY);
+            System.out.println(posX + " " + posY);
+        }
 
+        grillePickables[0] = new Cle((2+random.nextInt(17-2)), (2+random.nextInt(7-2)));
 
+        for (int i = 1; i < 4; i++) {
+            pickChoix = 1 + random.nextInt(2);
+            if (pickChoix == 1) {
+                grillePickables[i] = new Capsule((2+random.nextInt(17-2)), (2+random.nextInt(7-2)));
+            } else {
+                grillePickables[i] = new Coffre(2+random.nextInt(17-2), (2+random.nextInt(7-2)));
+            }
+        }
     }
 
     public void start() {
@@ -84,10 +129,8 @@ public class Jeu extends Observable implements Runnable {
     public void run() {
 
         while(true) {
-
             setChanged();
             notifyObservers();
-
             try {
                 Thread.sleep(pause);
             } catch (InterruptedException e) {

@@ -1,9 +1,9 @@
 package modele.plateau;
 
-public class Cle extends Pickable {
+public class Capsule extends Pickable {
 
-    public Cle(int posX, int PosY) {
-        signature = 0;
+    public Capsule(int posX, int PosY) {
+        signature = 1;
         x = posX;
         y = PosY;
     }

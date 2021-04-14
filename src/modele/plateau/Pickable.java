@@ -1,7 +1,6 @@
 package modele.plateau;
 
 public abstract class Pickable {
-    protected Jeu jeu;
     protected int x, y;
     protected int signature;
     protected boolean utiliser = false;
@@ -14,5 +13,13 @@ public abstract class Pickable {
 
     public int getY() {
         return y;
+    }
+
+    public boolean getUtiliser() {
+        return utiliser;
+    }
+
+    public int getSignature() {
+        return signature;
     }
 }
