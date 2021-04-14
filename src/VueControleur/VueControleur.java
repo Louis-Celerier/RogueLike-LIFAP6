@@ -33,6 +33,7 @@ public class VueControleur extends JFrame implements Observer {
     private ImageIcon icoCaseNormale;
     private ImageIcon icoMur;
     private ImageIcon icoColonne;
+    private ImageIcon icoCle;
 
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associée à une icône, suivant ce qui est présent dans le modèle)
 
@@ -67,6 +68,7 @@ public class VueControleur extends JFrame implements Observer {
         icoHero = chargerIcone("Images/Pacman.png");
         icoCaseNormale = chargerIcone("Images/Vide.png");
         icoMur = chargerIcone("Images/Mur.png");
+        icoCle = chargerIcone("Images/Cle.png");
     }
 
     private ImageIcon chargerIcone(String urlIcone) {
@@ -83,7 +85,7 @@ public class VueControleur extends JFrame implements Observer {
     }
 
     private void placerLesComposantsGraphiques() {
-        setTitle("Roguelike");
+        setTitle("Roguelike - Louis CELERIER");
         setSize(400, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
 
@@ -121,7 +123,7 @@ public class VueControleur extends JFrame implements Observer {
 
 
         tabJLabel[jeu.getHeros().getX()][jeu.getHeros().getY()].setIcon(icoHero);
-
+        tabJLabel[jeu.getCle().getX()][jeu.getCle().getY()].setIcon(icoCle);
     }
 
     @Override

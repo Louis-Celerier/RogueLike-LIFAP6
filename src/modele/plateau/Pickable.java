@@ -1,12 +1,18 @@
 package modele.plateau;
 
-public class Pickable {
-    private abstract int signature;
-    private boolean utiliser = false;
+public abstract class Pickable {
+    protected Jeu jeu;
+    protected int x, y;
+    protected int signature;
+    protected boolean utiliser = false;
 
-    public int getSignature() {
-        return signature;
+    public abstract int utilisation();
+
+    public int getX() {
+        return x;
     }
 
-    public 
+    public int getY() {
+        return y;
+    }
 }

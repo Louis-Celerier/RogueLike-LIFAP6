@@ -64,7 +64,10 @@ public class Heros {
     }
 
     public void prendre(Pickable objet) {
-
+        int obj = objet.utilisation();
+        if(obj >= 0) {
+            inventaire[obj]++;
+        }
     }
 
     private boolean traversable(int x, int y) {

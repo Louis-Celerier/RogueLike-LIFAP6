@@ -17,6 +17,8 @@ public class Jeu extends Observable implements Runnable {
 
     private Heros heros;
 
+    private Cle cle;
+
     private EntiteStatique[][] grilleEntitesStatiques = new EntiteStatique[SIZE_X][SIZE_Y];
 
     public Jeu() {
@@ -25,6 +27,10 @@ public class Jeu extends Observable implements Runnable {
 
     public Heros getHeros() {
         return heros;
+    }
+
+    public Cle getCle() {
+        return cle;
     }
 
     public EntiteStatique[][] getGrille() {
