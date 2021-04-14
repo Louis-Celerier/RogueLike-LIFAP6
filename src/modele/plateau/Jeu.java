@@ -18,6 +18,7 @@ public class Jeu extends Observable implements Runnable {
 
     private Heros heros;
     private Porte porte;
+    private boolean debut = true;
 
     public Porte getPorte() {
         return porte;
@@ -56,8 +57,23 @@ public class Jeu extends Observable implements Runnable {
 	}
 
     private void initialisationDesEntites() {
+        if (debut) {
+            heros = new Heros(this, 4, 4);
+            debut = false;
+        }
+        else {
+            if (heros.getY() == 0 || heros.getY() == 9) {
+                heros.stageSuivant(heros.getX(), 9 - heros.getY());
+            } else {
+                heros.stageSuivant(19 - heros.getX(), heros.getY());
+            }
+            for (int x = 0; x < 20; x++) {
+                for (int y = 1; y < 9; y++) {
+                    grilleEntitesStatiques[x][y] = null;
+                }
+            }
+        }
         Random random = new Random();
-        heros = new Heros(this, 4, 4);
         int posX, posY, pickChoix;
 
         // murs extérieurs horizontaux
@@ -72,8 +88,11 @@ public class Jeu extends Observable implements Runnable {
             addEntiteStatique(new Mur(this), 19, y);
         }
 
-        addEntiteStatique(new Mur(this), 2, 6);
-        addEntiteStatique(new Mur(this), 3, 6);
+        addEntiteStatique(new Mur(this), 1+random.nextInt(17-2), 1+random.nextInt(8-2));
+        addEntiteStatique(new Mur(this), 1+random.nextInt(17-2), 1+random.nextInt(8-2));
+        addEntiteStatique(new Mur(this), 1+random.nextInt(17-2), 1+random.nextInt(8-2));
+        addEntiteStatique(new CaseVide(this), 1+random.nextInt(17-2), 1+random.nextInt(8-2));
+
 
         if(random.nextBoolean()) {
             posX = (1+random.nextInt(18-1));
@@ -107,7 +126,6 @@ public class Jeu extends Observable implements Runnable {
             posX = 1+random.nextInt(19-1);
             posY = 1+random.nextInt(8-1);
             grilleEntitesStatiques[posX][posY] = grilleCasesUniques[i] = new CaseUnique(this, posX, posY);
-            System.out.println(posX + " " + posY);
         }
 
         grillePickables[0] = new Cle((2+random.nextInt(17-2)), (2+random.nextInt(7-2)));
@@ -131,6 +149,11 @@ public class Jeu extends Observable implements Runnable {
         while(true) {
             setChanged();
             notifyObservers();
+
+            if(heros.getX() == porte.getX() && heros.getY() == porte.getY()) {
+                this.initialisationDesEntites();
+            }
+
             try {
                 Thread.sleep(pause);
             } catch (InterruptedException e) {

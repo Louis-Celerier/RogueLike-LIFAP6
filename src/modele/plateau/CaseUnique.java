@@ -14,6 +14,10 @@ public class CaseUnique extends EntiteStatique {
         traverser = true;
     }
 
+    public void mouiller() {
+        traverser = false;
+    }
+
     public int getX() {
         return x;
     }

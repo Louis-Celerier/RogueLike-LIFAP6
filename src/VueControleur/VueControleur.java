@@ -40,6 +40,7 @@ public class VueControleur extends JFrame implements Observer {
     private ImageIcon icoMur;
     private ImageIcon icoColonne;
     private ImageIcon icoPorte;
+    private ImageIcon icoCaseVide;
 
     private ImageIcon icoCle;
     private ImageIcon icoEau;
@@ -68,6 +69,7 @@ public class VueControleur extends JFrame implements Observer {
                     case KeyEvent.VK_DOWN : jeu.getHeros().bas(); break;
                     case KeyEvent.VK_UP : jeu.getHeros().haut(); break;
                     case KeyEvent.VK_A : jeu = new Jeu(); break;
+                    case KeyEvent.VK_E : jeu.getHeros().capsuleUtilisation(); break;
                 }
             }
         });
@@ -85,6 +87,7 @@ public class VueControleur extends JFrame implements Observer {
         icoCaseUPasOk = chargerIcone("Images/CaseUPasOk.png");
         icoMur = chargerIcone("Images/Mur.png");
         icoPorte = chargerIcone("Images/Porte.png");
+        icoCaseVide = chargerIcone("Images/CaseVide.png");
 
         icoCle = chargerIcone("Images/Cle.png");
         icoEau = chargerIcone("Images/Eau.png");
@@ -144,6 +147,8 @@ public class VueControleur extends JFrame implements Observer {
                     } else {
                         tabJLabel[x][y].setIcon(icoCaseUPasOk);
                     }
+                } else if (e instanceof CaseVide) {
+                    tabJLabel[x][y].setIcon(icoCaseVide);
                 }
             }
         }

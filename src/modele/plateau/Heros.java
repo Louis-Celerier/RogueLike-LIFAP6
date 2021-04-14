@@ -33,6 +33,8 @@ public class Heros {
         x = _x;
         y = _y;
         inventaire[0] = 0;
+        inventaire[1] = 1;
+        inventaire[2] = 0;
     }
 
     public void droite() {
@@ -76,6 +78,42 @@ public class Heros {
         int obj = objet.utilisation();
         if(obj >= 0) {
             inventaire[obj]++;
+        }
+    }
+
+    public void stageSuivant(int posX, int posY) {
+        inventaire[1] = 1;
+        x = posX;
+        y = posY;
+    }
+
+    public void capsuleUtilisation() {
+        int posX, posY;
+        if(inventaire[1] > 0) {
+            for (CaseUnique element: jeu.getCasesUniques()) {
+                if(!element.traversable()) {
+                    posX = x;
+                    posY = y;
+                    switch (orientation) {
+                        case 0:
+                            posX++;
+                            break;
+                        case 1:
+                            posX--;
+                            break;
+                        case 2:
+                            posY++;
+                            break;
+                        case 3:
+                            posY--;
+                            break;
+                    }
+                    if(element.getX() == posX && element.getY() == posY) {
+                        element.mouiller();
+                        inventaire[1]--;
+                    }
+                }
+            }
         }
     }
 
